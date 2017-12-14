@@ -1,0 +1,26 @@
+on init
+    insmod /system/lib/modules/texfat.ko
+
+on boot
+    start chargeled
+
+on offmode_charging
+    start detect_key
+    start offmode_charging
+
+on property:ro.boot.mode=offmode_charging
+    stop adbd
+    stop recovery
+
+service chargeled /sbin/chargeled
+    disabled
+    seclabel u:r:healthd:s0
+
+service detect_key /sbin/detect_key
+    disabled
+    seclabel u:r:healthd:s0
+    oneshot
+
+service offmode_charging /sbin/offmode_charging
+    disabled
+    seclabel u:r:healthd:s0
